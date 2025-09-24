@@ -1,15 +1,26 @@
 # imports
-from tiles import load_level, find_char, iter_tiles, build_solids, build_coins, build_flag
+from tiles import (
+    load_level, find_char, iter_tiles, build_solids,
+    build_coins, build_flag
+)
+
 from config import (
     SCREEN_WIDTH, SCREEN_HEIGHT, FPS, BG_COLOR, TILE_SIZE,
     WALL_COLOR, COIN_COLOR, FLAG_COLOR, PLAYER_COLOR,
-    WALL_CHAR, COIN_CHAR, FLAG_CHAR, PLAYER_CHAR
+    WALL_CHAR, COIN_CHAR, FLAG_CHAR, PLAYER_CHAR, LEVELS
 )
 from player import Player
 import pygame
 from pathlib import Path
 
-LEVEL_PATH = Path(__file__).resolve().parent.parent / "levels" / "level1.txt"
+def load_world(level_path):
+    """Load one level's world data (rows, solids, coins, flag, spawn px/py)."""
+    rows   = load_level(level_path)
+    solids = build_solids(rows, '#', TILE_SIZE)
+    coins  = build_coins(rows, 'C', TILE_SIZE)
+    flag   = build_flag(rows, 'F', TILE_SIZE)
+    sx, sy = find_char(rows, 'P') or (1, 1)
+    return rows, solids, coins, flag, (sx * TILE_SIZE, sy * TILE_SIZE)
 
 def main():
     pygame.init()
@@ -17,11 +28,13 @@ def main():
     pygame.display.set_caption("Game Demo")
     clock = pygame.time.Clock()
     font = pygame.font.Font(None, 28)
-    # load level
-    rows   = load_level(LEVEL_PATH)
-    solids = build_solids(rows, WALL_CHAR, TILE_SIZE)
-    coins  = build_coins(rows, COIN_CHAR, TILE_SIZE)
-    flag   = build_flag(rows, FLAG_CHAR, TILE_SIZE)
+
+    # load level 0
+    level_path = 0  # Change index to load different levels
+    rows, solids, coins, flag, (spawn_x, spawn_y) = load_world(LEVELS[level_path])
+    print(f"Loaded level from {level_path}, size: {len(rows[0])}x{len(rows)} tiles")
+    print(f"Player spawn at: {spawn_x}, {spawn_y}")
+
 
     # player setup
     sx, sy = find_char(rows, PLAYER_CHAR) or (1, 1)
@@ -47,10 +60,16 @@ def main():
                 coins.remove(c)
                 score += 1
 
-        # reach flag to complete level
+        # reach flag -> go to next level
         if flag and player.rect.colliderect(flag):
-            print("Level complete!")
-            running = False  # (later: load next level)
+            level_path += 1
+            if level_path < len(LEVELS):
+                rows, solids, coins, flag, (px, py) = load_world(LEVELS[level_path])
+                player = Player(px, py)
+            else:
+                # all levels done
+                print("All levels complete! Congrats!")
+                running = False
 
         # draw
         screen.fill(BG_COLOR)

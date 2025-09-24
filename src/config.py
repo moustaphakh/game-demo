@@ -1,3 +1,5 @@
+from pathlib import Path
+
 # --- Window ---
 SCREEN_WIDTH  = 800
 SCREEN_HEIGHT = 600
@@ -6,6 +8,14 @@ BG_COLOR = (30, 30, 40)   # background color
 
 # --- World ---
 TILE_SIZE = 32            # 1 tile = 32x32 px
+
+#--Level files---
+# Absolute paths to all levels
+LEVELS = [
+    Path(__file__).resolve().parent.parent / "levels" / "level1.txt",
+    Path(__file__).resolve().parent.parent / "levels" / "level2.txt",
+    Path(__file__).resolve().parent.parent / "levels" / "level3.txt",
+]
 
 
 # --- Player physics (fundamental constants, might change) ---
