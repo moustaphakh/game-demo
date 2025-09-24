@@ -1,4 +1,5 @@
 #this file contains the tile setup for the game
+import pygame
 # Each level is a text file with characters representing different tiles.
 # For example:
 # P = player spawn point
@@ -23,3 +24,17 @@ def find_char(rows: list[str], ch: str) -> tuple[int, int] | None:
         if col_idx != -1:
             return (col_idx, row_idx)
     return None
+
+def iter_tiles(rows):
+    """Yield (tx, ty, ch) for every tile coordinate."""
+    for ty, row in enumerate(rows):
+        for tx, ch in enumerate(row):
+            yield tx, ty, ch
+
+def build_solids(rows, wall_char, tile_size):
+    """Return a list of Rects for solid tiles (e.g., '#')."""
+    rects = []
+    for tx, ty, ch in iter_tiles(rows):
+        if ch == wall_char:
+            rects.append(pygame.Rect(tx * tile_size, ty * tile_size, tile_size, tile_size))
+    return rects
