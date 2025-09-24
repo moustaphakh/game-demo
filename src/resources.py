@@ -1,1 +1,2 @@
 #this file contains the resources needed to load images and assets into the game
+# For simplicity, we will use colored rectangles and circles instead of image files. didnt want to deal with loading images
