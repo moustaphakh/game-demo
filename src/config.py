@@ -9,9 +9,10 @@ TILE_SIZE = 32            # 1 tile = 32x32 px
 
 # --- Player physics (fundamental constants, might change) ---
 PLAYER_SPEED    = 200     # px/s left-right
-JUMP_VELOCITY   = -350    # px/s (negative is up)
+JUMP_VELOCITY   = -420    # px/s (negative is up)
 GRAVITY         = 1200    # px/s^2
 MAX_FALL_SPEED  = 800     # px/s capping the fall speed
+PLAYER_COLOR = (200, 140, 200)  # Player color
 
 # --- Colors ---
 BG_COLOR     = (30, 30, 40)

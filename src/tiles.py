@@ -32,9 +32,26 @@ def iter_tiles(rows):
             yield tx, ty, ch
 
 def build_solids(rows, wall_char, tile_size):
-    """Return a list of Rects for solid tiles (e.g., '#')."""
+    """Return a list of Rects for solid tiles"""
     rects = []
     for tx, ty, ch in iter_tiles(rows):
         if ch == wall_char:
             rects.append(pygame.Rect(tx * tile_size, ty * tile_size, tile_size, tile_size))
     return rects
+
+def build_coins(rows, coin_char, tile_size):
+    """Create a list of coin rectangles from an ASCII level."""
+    coins = []
+    for y, row in enumerate(rows):
+        for x, ch in enumerate(row):
+            if ch == coin_char:
+                coins.append(pygame.Rect(x*tile_size, y*tile_size, tile_size, tile_size))
+    return coins
+
+def build_flag(rows, flag_char, tile_size):
+    """Create a flag rectangle from an ASCII level."""
+    for y, row in enumerate(rows):
+        for x, ch in enumerate(row):
+            if ch == flag_char:
+                return pygame.Rect(x*tile_size, y*tile_size, tile_size, tile_size)
+    return None
